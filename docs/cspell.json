@@ -153,6 +153,7 @@
     "inproceedings",
     "interner",
     "intrinsics",
+    "INVOLI",
     "ipynb",
     "ipython",
     "itertools",
@@ -361,7 +362,8 @@
     "trackpad",
     "trimesh",
     "Trimesh",
-    "trimleft", // doxygen command
+    "trimleft",
+    // doxygen command
     "TUID",
     "tungstenite",
     "turtlebot",
