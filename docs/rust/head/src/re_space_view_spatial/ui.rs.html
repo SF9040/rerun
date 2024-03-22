@@ -760,6 +760,7 @@
 <a href="#760" id="760">760</a>
 <a href="#761" id="761">761</a>
 <a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>egui::{epaint::util::OrderedFloat, text::TextWrapping, NumExt, WidgetText};
 <span class="kw">use </span>macaw::BoundingBox;
 
@@ -779,7 +780,7 @@
 <span class="kw">use super</span>::{eye::Eye, ui_2d::View2DState, ui_3d::View3DState};
 <span class="kw">use </span><span class="kw">crate</span>::scene_bounding_boxes::SceneBoundingBoxes;
 <span class="kw">use crate</span>::{
-    contexts::{AnnotationSceneContext, NonInteractiveEntities},
+    contexts::AnnotationSceneContext,
     picking::{PickableUiRect, PickingContext, PickingHitType, PickingResult},
     view_kind::SpatialSpaceViewKind,
     visualizers::{CamerasVisualizer, ImageVisualizer, UiLabel, UiLabelTarget},
@@ -1216,7 +1217,6 @@
         ctx.app_options.show_picking_debug_overlay,
     );
 
-    <span class="kw">let </span>non_interactive = view_ctx.get::&lt;NonInteractiveEntities&gt;()<span class="question-mark">?</span>;
     <span class="kw">let </span>annotations = view_ctx.get::&lt;AnnotationSceneContext&gt;()<span class="question-mark">?</span>;
     <span class="kw">let </span>images = visualizers.get::&lt;ImageVisualizer&gt;()<span class="question-mark">?</span>;
 
@@ -1244,10 +1244,12 @@
             </span>instance_path.instance_key = InstanceKey::SPLAT;
         }
 
-        <span class="kw">if </span>non_interactive
-            .<span class="number">0
-            </span>.contains(<span class="kw-2">&amp;</span>instance_path.entity_path.hash())
-        {
+        <span class="kw">let </span>interactive = ctx
+            .lookup_query_result(query.space_view_id)
+            .tree
+            .lookup_result_by_path(<span class="kw-2">&amp;</span>instance_path.entity_path)
+            .map_or(<span class="bool-val">false</span>, |result| result.accumulated_properties().interactive);
+        <span class="kw">if </span>!interactive {
             <span class="kw">continue</span>;
         }
 
