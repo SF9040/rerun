@@ -1,9 +1,25 @@
 use re_data_store::{DataStore, LatestAtQuery};
 use re_log_types::{EntityPath, RowId, TimeInt};
-use re_types_core::Component;
 use re_types_core::{external::arrow2::array::Array, ComponentName};
+use re_types_core::{Archetype, Component};
 
-use crate::{CachedLatestAtComponentResults, Caches, PromiseResolver, PromiseResult};
+use crate::{
+    CachedLatestAtComponentResults, CachedLatestAtResults, Caches, PromiseResolver, PromiseResult,
+};
+
+// ---
+
+impl CachedLatestAtResults {
+    pub fn to_archetype<A: Archetype>() -> PromiseResult<A> {
+        // TODO: required, recommended, optional
+
+        todo!()
+
+        // for component_name in A::required_components() {
+        //     let results = results.get_required(MyPoint::name())?;
+        // }
+    }
+}
 
 // ---
 
@@ -267,7 +283,7 @@ impl Caches {
         re_tracing::profile_function!();
 
         let results = self.latest_at(store, query, entity_path, [C::name()]);
-        let result = results.get::<C>()?;
+        let result = results.get(C::name())?;
 
         let index @ (data_time, row_id) = *result.index();
 
